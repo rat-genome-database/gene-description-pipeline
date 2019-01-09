@@ -2,6 +2,12 @@
 
 <beans>
     <bean id="main" class="edu.mcw.rgd.pipelines.GeneDesc.Main">
-        <property name="version" value="--Gene Description pipeline -- ver. 0.1.0 -- Jan 9, 2019 --" />
+        <property name="version" value="== Gene Description pipeline -- ver. 0.8.0 -- Jan 9, 2019 --" />
+        <property name="speciesProcessed">
+            <list>
+                <value>rat</value>
+            </list>
+        </property>
+        <property name="agrApiUrl" value="https://www.alliancegenome.org/api/gene/"/>
     </bean>
 </beans>

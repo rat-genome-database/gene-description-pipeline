@@ -1,3 +1,3 @@
-Ver 0.1, Jan 9, 2019
-  -init
+v. 0.8.0, Jan 9, 2019
+  -implemented retrieval of AGR gene record via AGR API
 

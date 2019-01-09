@@ -17,7 +17,10 @@ public class DAO {
     GeneDAO gdao = new GeneDAO();
 
     public String getConnectionInfo() {
-        return xdao.getConnectionInfo();
+        return gdao.getConnectionInfo();
     }
 
+    public List<Gene> getGenesForSpecies(int speciesTypeKey) throws Exception {
+        return gdao.getActiveGenes(speciesTypeKey);
+    }
 }
