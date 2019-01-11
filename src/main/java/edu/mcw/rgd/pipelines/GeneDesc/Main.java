@@ -202,7 +202,10 @@ public class Main {
             mergedDesc +=  "; " + pathwayDesc;
         }
         if( chebiDesc!=null ) {
-            mergedDesc +=  "; " + chebiDesc;
+            if( !mergedDesc.endsWith("; ") ) {
+                mergedDesc += "; ";
+            }
+            mergedDesc += chebiDesc;
         }
         mergedDesc += ".";
         return mergedDesc;
