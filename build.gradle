@@ -12,7 +12,7 @@ apply plugin: 'application'
 // JDK 8
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-mainClassName = 'edu.mcw.rgd.pipeline.GeneDesc.Main'
+mainClassName = 'edu.mcw.rgd.pipelines.GeneDesc.Main'
 String myAppName = 'GeneDescPipeline'
 
 repositories {
