@@ -1,3 +1,6 @@
+v. 2.0.0, Mar 29, 2019
+  -implemented second way of acquiring of automated gene descriptions from AGR: via TSV FILE
+
 v. 1.0.0, Jan 11, 2019
   -full release: downloads all automated gene descriptions from AGR, merges them with automated RGD descriptions
    and stores both in GENES table in columns AGR_DESC, MERGED_DESC

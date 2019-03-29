@@ -2,12 +2,19 @@
 
 <beans>
     <bean id="main" class="edu.mcw.rgd.pipelines.GeneDesc.Main">
-        <property name="version" value="== Gene Description pipeline -- ver. 1.0.0 -- Jan 11, 2019 --" />
+        <property name="version" value="== Gene Description pipeline -- ver. 2.0.0 -- Mar 29, 2019 --" />
         <property name="speciesProcessed">
             <list>
                 <value>rat</value>
             </list>
         </property>
+    </bean>
+
+    <bean id="jsonApi" class="edu.mcw.rgd.pipelines.GeneDesc.AgrGeneDescViaJsonApi">
         <property name="agrApiUrl" value="https://www.alliancegenome.org/api/gene/"/>
+    </bean>
+
+    <bean id="tsvFile" class="edu.mcw.rgd.pipelines.GeneDesc.AgrGeneDescViaTsvFile">
+        <property name="geneDescFile" value="http://reports.alliancegenome.org/gene-descriptions/RGD_gene_desc_latest.tsv"/>
     </bean>
 </beans>

@@ -1,17 +1,13 @@
 package edu.mcw.rgd.pipelines.GeneDesc;
 
-import com.google.gson.stream.JsonReader;
 import edu.mcw.rgd.datamodel.Gene;
 import edu.mcw.rgd.datamodel.SpeciesType;
-import edu.mcw.rgd.process.FileDownloader;
 import edu.mcw.rgd.process.Utils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.core.io.FileSystemResource;
 
-import java.io.File;
-import java.io.FileReader;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
@@ -27,7 +23,6 @@ public class Main {
     private DAO dao = new DAO();
     private String version;
     private List<String> speciesProcessed;
-    private String agrApiUrl;
 
     Logger log = Logger.getLogger("summary");
 
@@ -37,15 +32,29 @@ public class Main {
         new XmlBeanDefinitionReader(bf).loadBeanDefinitions(new FileSystemResource("properties/AppConfigure.xml"));
         Main instance = (Main) (bf.getBean("main"));
 
+        AgrGeneDesc agrGeneDescManager = null;
+
+        for( String arg: args ) {
+            switch(arg) {
+                case "--jsonApi":
+                    agrGeneDescManager = (AgrGeneDesc) (bf.getBean("jsonApi"));
+                    break;
+
+                case "--tsvFile":
+                    agrGeneDescManager = (AgrGeneDesc) (bf.getBean("tsvFile"));
+                    break;
+            }
+        }
+
         try {
-            instance.run();
+            instance.run(agrGeneDescManager);
         }catch (Exception e) {
             Utils.printStackTrace(e, instance.log);
             throw e;
         }
     }
 
-    public void run() throws Exception {
+    public void run(AgrGeneDesc agrGeneDescManager) throws Exception {
 
         long time0 = System.currentTimeMillis();
 
@@ -55,16 +64,17 @@ public class Main {
         SimpleDateFormat sdt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         log.info("   started at "+sdt.format(new Date(time0)));
 
+        log.info(agrGeneDescManager.getGeneralInfo());
+
         for( String species: getSpeciesProcessed() ) {
-            run(species);
+            run(species, agrGeneDescManager);
         }
         log.info("=== OK -- elapsed time "+Utils.formatElapsedTime(time0, System.currentTimeMillis()));
     }
 
-    void run(String species) throws Exception {
+    void run(String species, AgrGeneDesc agrGeneDescManager) throws Exception {
         log.info("running for species: "+species);
-
-        int genesNotInAgr = 0;
+        agrGeneDescManager.init(species);
 
         int genesWithAgrDesc = 0;
         int newAgrDesc = 0;
@@ -84,19 +94,8 @@ public class Main {
         log.info("  genes to be processed: "+activeGenes.size());
         Collections.shuffle(activeGenes);
         for( Gene gene: activeGenes ) {
-            Thread.sleep(500); // be nice to AGR: sleep 500ms before making a next web request
 
-            String agrCuri = "RGD:"+gene.getRgdId();
-            String localFile = downloadGeneFile(agrCuri);
-
-            String fileContents = Utils.readFileAsString(localFile);
-            if( Utils.isStringEmpty(fileContents) ) {
-                genesNotInAgr++;
-                new File(localFile).delete();
-                continue;
-            }
-
-            String auto = parseField(localFile, "automatedGeneSynopsis");
+            String auto = agrGeneDescManager.getAutoGeneDesc(gene.getRgdId());
 
             if( auto!=null ) {
                 genesWithAgrDesc++;
@@ -125,11 +124,9 @@ public class Main {
             if( doGeneUpdate ) {
                 dao.updateAgrDesc(gene, auto, mergedDesc);
             }
-
-            new File(localFile).delete();
         }
 
-        log.info("  genes not in AGR: "+genesNotInAgr);
+        log.info("  genes not in AGR: "+agrGeneDescManager.getGeneCountNotInAgr());
 
         log.info("  genes with automated AGR desription: "+genesWithAgrDesc);
         log.info("  genes with new automated AGR desription: "+newAgrDesc);
@@ -211,40 +208,6 @@ public class Main {
         return mergedDesc;
     }
 
-    // return local file name
-    String downloadGeneFile(String agrCuri) throws Exception {
-        String rgdid = agrCuri.replace(":","");
-
-        FileDownloader fd = new FileDownloader();
-        fd.setExternalFile(getAgrApiUrl()+agrCuri);
-        fd.setLocalFile("data/"+rgdid+".json");
-        String localFile = fd.download();
-        return localFile;
-    }
-
-    String parseField(String fileName, String fieldName) throws Exception {
-        JsonReader jsonReader = new JsonReader(new FileReader(fileName));
-        jsonReader.beginObject();
-
-        String auto = null;
-        while (jsonReader.hasNext()) {
-            String name = jsonReader.nextName();
-
-            if (name.equals(fieldName)) {
-                if( auto==null ) {
-                    auto = jsonReader.nextString();
-                }
-            } else {
-                jsonReader.skipValue();
-            }
-        }
-
-        jsonReader.endObject();
-        jsonReader.close();
-
-        return auto;
-    }
-
     public void setVersion(String version) {
         this.version = version;
     }
@@ -259,14 +222,6 @@ public class Main {
 
     public void setSpeciesProcessed(List<String> speciesProcessed) {
         this.speciesProcessed = speciesProcessed;
-    }
-
-    public String getAgrApiUrl() {
-        return agrApiUrl;
-    }
-
-    public void setAgrApiUrl(String agrApiUrl) {
-        this.agrApiUrl = agrApiUrl;
     }
 }
 
