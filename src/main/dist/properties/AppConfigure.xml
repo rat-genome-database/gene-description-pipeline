@@ -2,10 +2,12 @@
 
 <beans>
     <bean id="main" class="edu.mcw.rgd.pipelines.GeneDesc.Main">
-        <property name="version" value="== Gene Description pipeline -- ver. 2.0.0 -- Mar 29, 2019 --" />
+        <property name="version" value="Gene Description pipeline   -- build Oct 15, 2019 --" />
         <property name="speciesProcessed">
             <list>
                 <value>rat</value>
+                <value>mouse</value>
+                <value>human</value>
             </list>
         </property>
     </bean>
@@ -15,6 +17,12 @@
     </bean>
 
     <bean id="tsvFile" class="edu.mcw.rgd.pipelines.GeneDesc.AgrGeneDescViaTsvFile">
-        <property name="geneDescFile" value="http://reports.alliancegenome.org/gene-descriptions/RGD_gene_desc_latest.tsv"/>
+        <property name="geneDescFiles">
+            <map>
+                <entry key="rat" value="http://reports.alliancegenome.org/gene-descriptions/RGD_gene_desc_latest.tsv"/>
+                <entry key="mouse" value="http://reports.alliancegenome.org/gene-descriptions/MGI_gene_desc_latest.tsv"/>
+                <entry key="human" value="http://reports.alliancegenome.org/gene-descriptions/HUMAN_gene_desc_latest.tsv"/>
+            </map>
+        </property>
     </bean>
 </beans>

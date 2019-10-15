@@ -12,25 +12,28 @@ import java.util.Map;
  * Created by mtutaj on 3/29/2019.
  */
 public class AgrGeneDescViaTsvFile extends AgrGeneDesc {
-    private String geneDescFile;
 
     private Map<String, String> descMap = new HashMap<>();
     private int geneCountNotInAgr;
+    private Map<String,String> geneDescFiles;
 
     public String getGeneralInfo() {
         return "   automated gene descriptions will be downloaded via TSV FILE";
     }
 
     public void init(String speciesName) throws Exception {
-        if( !speciesName.equals("rat") ) {
-            throw new Exception("ERROR! species different than rat!");
+
+        // there must be a species file
+        String geneDescFile = getGeneDescFiles().get(speciesName);
+        if( geneDescFile==null ) {
+            throw new Exception("ERROR! species "+speciesName+" does not have a gene description file name defined!");
         }
 
         FileDownloader fd = new FileDownloader();
         fd.setUseCompression(true);
         fd.setPrependDateStamp(true);
-        fd.setExternalFile(getGeneDescFile());
-        fd.setLocalFile("data/desc_rat.txt.gz");
+        fd.setExternalFile(geneDescFile);
+        fd.setLocalFile("data/desc_"+speciesName+".txt.gz");
 
         String localFile = fd.downloadNew();
 
@@ -57,9 +60,8 @@ public class AgrGeneDescViaTsvFile extends AgrGeneDesc {
         geneCountNotInAgr = 0;
     }
 
-    public String getAutoGeneDesc(int rgdId) throws Exception {
-        String rgdCurie = "RGD:"+rgdId;
-        String autoDesc = descMap.get(rgdCurie);
+    public String getAutoGeneDesc(String curie) throws Exception {
+        String autoDesc = descMap.get(curie);
         if( autoDesc==null ) {
             geneCountNotInAgr++;
         }
@@ -69,15 +71,15 @@ public class AgrGeneDescViaTsvFile extends AgrGeneDesc {
         return autoDesc;
     }
 
-    public void setGeneDescFile(String geneDescFile) {
-        this.geneDescFile = geneDescFile;
-    }
-
-    public String getGeneDescFile() {
-        return geneDescFile;
-    }
-
     public int getGeneCountNotInAgr() {
         return geneCountNotInAgr;
+    }
+
+    public void setGeneDescFiles(Map geneDescFiles) {
+        this.geneDescFiles = geneDescFiles;
+    }
+
+    public Map<String,String> getGeneDescFiles() {
+        return geneDescFiles;
     }
 }

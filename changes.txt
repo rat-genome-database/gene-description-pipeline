@@ -1,3 +1,6 @@
+Oct 15, 2019
+  -added support for MOUSE and HUMAN
+
 v. 2.0.0, Mar 29, 2019
   -implemented second way of acquiring of automated gene descriptions from AGR: via TSV FILE
 

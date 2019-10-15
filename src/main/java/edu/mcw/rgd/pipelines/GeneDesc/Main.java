@@ -9,9 +9,7 @@ import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.core.io.FileSystemResource;
 
 import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 /**
@@ -84,6 +82,9 @@ public class Main {
         int newMergedDesc = 0;
         int upToDateMergedDesc = 0;
 
+        int genesWithoutCurie = 0;
+        int genesWithClearedDesc = 0;
+
         // validate species
         int speciesTypeKey = SpeciesType.parse(species);
         if( SpeciesType.getTaxonomicId(speciesTypeKey)<=0 ) {
@@ -92,10 +93,26 @@ public class Main {
 
         List<Gene> activeGenes = dao.getGenesForSpecies(speciesTypeKey);
         log.info("  genes to be processed: "+activeGenes.size());
+
+        Map<Integer,String> geneRgdIdToCurieMap = getGeneRgdIdToCurieMap(speciesTypeKey, activeGenes);
+        log.info("  gene curies loaded:    "+geneRgdIdToCurieMap.size());
+
         Collections.shuffle(activeGenes);
         for( Gene gene: activeGenes ) {
 
-            String auto = agrGeneDescManager.getAutoGeneDesc(gene.getRgdId());
+            String curie = geneRgdIdToCurieMap.get(gene.getRgdId());
+            if( curie==null ) {
+                genesWithoutCurie++;
+
+                // update the gene if it has an automated or merged description
+                if( !Utils.isStringEmpty(gene.getAgrDescription()) || !Utils.isStringEmpty(gene.getMergedDescription()) ) {
+                    dao.updateAgrDesc(gene, null, null);
+                    genesWithClearedDesc++;
+                }
+                continue;
+            }
+
+            String auto = agrGeneDescManager.getAutoGeneDesc(curie);
 
             if( auto!=null ) {
                 genesWithAgrDesc++;
@@ -128,13 +145,21 @@ public class Main {
 
         log.info("  genes not in AGR: "+agrGeneDescManager.getGeneCountNotInAgr());
 
-        log.info("  genes with automated AGR desription: "+genesWithAgrDesc);
-        log.info("  genes with new automated AGR desription: "+newAgrDesc);
-        log.info("  genes with up-to-date automated AGR desription: "+upToDateAgrDesc);
+        if( genesWithoutCurie!=0 ) {
+            log.info("  genes in RGD without CURIE: " + genesWithoutCurie);
+        }
+        if( genesWithClearedDesc!=0 ) {
+            log.info("  genes with cleared desc: " + genesWithClearedDesc);
+        }
 
-        log.info("  genes with automated merged desription: "+genesWithMergedDesc);
-        log.info("  genes with new automated merged desription: "+newMergedDesc);
-        log.info("  genes with up-to-date automated merged desription: "+upToDateMergedDesc);
+        log.info("  genes with automated AGR description: "+genesWithAgrDesc);
+        log.info("  genes with new automated AGR description: "+newAgrDesc);
+        log.info("  genes with up-to-date automated AGR description: "+upToDateAgrDesc);
+
+        log.info("  genes with automated merged description: "+genesWithMergedDesc);
+        log.info("  genes with new automated merged description: "+newMergedDesc);
+        log.info("  genes with up-to-date automated merged description: "+upToDateMergedDesc);
+        log.info("");
     }
 
     String generateMergedDesc(Gene gene, String agrDesc) throws Exception {
@@ -206,6 +231,20 @@ public class Main {
         }
         mergedDesc += ".";
         return mergedDesc;
+    }
+
+    Map<Integer,String> getGeneRgdIdToCurieMap(int speciesTypeKey, List<Gene> genes) throws Exception {
+
+        // for rat it is simple
+        if( speciesTypeKey==SpeciesType.RAT ) {
+            Map<Integer,String> result = new HashMap<>(genes.size());
+            for( Gene g: genes ) {
+                result.put(g.getRgdId(), "RGD:"+g.getRgdId());
+            }
+            return result;
+        }
+
+        return dao.getGeneRgdIdToCurieMap(speciesTypeKey);
     }
 
     public void setVersion(String version) {

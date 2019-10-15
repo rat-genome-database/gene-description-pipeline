@@ -26,10 +26,9 @@ public class AgrGeneDescViaJsonApi extends AgrGeneDesc {
         }
     }
 
-    public String getAutoGeneDesc(int rgdId) throws Exception {
+    public String getAutoGeneDesc(String curie) throws Exception {
 
-        String agrCuri = "RGD:"+rgdId;
-        String localFile = downloadGeneFile(agrCuri);
+        String localFile = downloadGeneFile(curie);
 
         String fileContents = Utils.readFileAsString(localFile);
         if( Utils.isStringEmpty(fileContents) ) {
