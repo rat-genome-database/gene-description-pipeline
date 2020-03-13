@@ -24,6 +24,7 @@ public class AgrGeneDescViaJsonApi extends AgrGeneDesc {
         if( !speciesName.equals("rat") ) {
             throw new Exception("ERROR! species different than rat!");
         }
+        super.init(speciesName);
     }
 
     public String getAutoGeneDesc(String curie) throws Exception {

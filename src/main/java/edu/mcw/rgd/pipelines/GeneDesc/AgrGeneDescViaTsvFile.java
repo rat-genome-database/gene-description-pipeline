@@ -3,6 +3,7 @@ package edu.mcw.rgd.pipelines.GeneDesc;
 
 import edu.mcw.rgd.process.FileDownloader;
 import edu.mcw.rgd.process.Utils;
+import org.apache.log4j.Logger;
 
 import java.io.BufferedReader;
 import java.util.HashMap;
@@ -28,6 +29,7 @@ public class AgrGeneDescViaTsvFile extends AgrGeneDesc {
         if( geneDescFile==null ) {
             throw new Exception("ERROR! species "+speciesName+" does not have a gene description file name defined!");
         }
+        super.init(speciesName);
 
         FileDownloader fd = new FileDownloader();
         fd.setUseCompression(true);
@@ -64,6 +66,7 @@ public class AgrGeneDescViaTsvFile extends AgrGeneDesc {
         String autoDesc = descMap.get(curie);
         if( autoDesc==null ) {
             geneCountNotInAgr++;
+            Logger.getLogger("rgdGenesNotInAgr").debug(getSpeciesName()+"  "+curie);
         }
         else if( autoDesc.isEmpty() ) {
             autoDesc = null;

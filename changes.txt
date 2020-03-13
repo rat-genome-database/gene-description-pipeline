@@ -1,3 +1,6 @@
+Mar 13, 2020
+  -added logging of active genes in RGD, that are not in AGR
+
 Oct 15, 2019
   -added support for MOUSE and HUMAN
 
