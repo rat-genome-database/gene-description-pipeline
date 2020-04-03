@@ -2,7 +2,7 @@
 
 <beans>
     <bean id="main" class="edu.mcw.rgd.pipelines.GeneDesc.Main">
-        <property name="version" value="Gene Description pipeline   -- build Mar 13, 2020 --" />
+        <property name="version" value="Gene Description pipeline   -- build Apr 03, 2020 --" />
         <property name="speciesProcessed">
             <list>
                 <value>rat</value>
@@ -17,12 +17,20 @@
     </bean>
 
     <bean id="tsvFile" class="edu.mcw.rgd.pipelines.GeneDesc.AgrGeneDescViaTsvFile">
-        <property name="geneDescFiles">
+        <property name="geneDescFiles"><!-- obsolete -->
             <map>
                 <entry key="rat" value="http://reports.alliancegenome.org/gene-descriptions/RGD_gene_desc_latest.tsv"/>
                 <entry key="mouse" value="http://reports.alliancegenome.org/gene-descriptions/MGI_gene_desc_latest.tsv"/>
                 <entry key="human" value="http://reports.alliancegenome.org/gene-descriptions/HUMAN_gene_desc_latest.tsv"/>
             </map>
         </property>
+        <property name="latestFiles">
+            <map>
+                <entry key="rat" value="https://fms.alliancegenome.org/api/datafile/by/GENE-DESCRIPTION-TSV/RGD?latest=true"/>
+                <entry key="mouse" value="https://fms.alliancegenome.org/api/datafile/by/GENE-DESCRIPTION-TSV/MGI?latest=true"/>
+                <entry key="human" value="https://fms.alliancegenome.org/api/datafile/by/GENE-DESCRIPTION-TSV/HUMAN?latest=true"/>
+            </map>
+        </property>
+        <property name="downloadUrlPrefix" value="https://download.alliancegenome.org/"/>
     </bean>
 </beans>

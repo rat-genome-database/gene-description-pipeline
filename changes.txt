@@ -1,3 +1,6 @@
+Apr3, 2020
+  -implemented latest file logic due to discontinuation of of stable urls
+
 Mar 13, 2020
   -added logging of active genes in RGD, that are not in AGR
 
