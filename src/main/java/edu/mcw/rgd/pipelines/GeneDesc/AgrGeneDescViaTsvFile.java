@@ -33,7 +33,7 @@ public class AgrGeneDescViaTsvFile extends AgrGeneDesc {
         fd.setUseCompression(true);
         fd.setPrependDateStamp(true);
         fd.setExternalFile(latestFileUrl);
-        fd.setLocalFile("data/desc_"+speciesName+".json.gz");
+        fd.setLocalFile("data/desc_"+speciesName+".txt.gz");
 
         String localFile = fd.downloadNew();
 
