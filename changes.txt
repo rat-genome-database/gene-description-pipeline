@@ -1,3 +1,6 @@
+Jun 26, 2020
+  -fixed parser: added handling of header lines and empty lines
+
 Apr3, 2020
   -implemented latest file logic due to discontinuation of of stable urls
 

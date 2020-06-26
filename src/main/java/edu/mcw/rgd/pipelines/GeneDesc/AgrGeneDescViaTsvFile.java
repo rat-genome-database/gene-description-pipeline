@@ -14,6 +14,8 @@ import java.util.Map;
  */
 public class AgrGeneDescViaTsvFile extends AgrGeneDesc {
 
+    Logger log = Logger.getLogger("summary");
+
     private Map<String, String> descMap = new HashMap<>();
     private int geneCountNotInAgr;
     private Map<String,String> geneDescFiles;
@@ -37,12 +39,20 @@ public class AgrGeneDescViaTsvFile extends AgrGeneDesc {
 
         String localFile = fd.downloadNew();
 
+        int linesWithoutDescription = 0;
+
         // sample two lines from the tab-separated-file:
         // RGD:11512775	LOC108349825	No description available
         // RGD:1582795	LOC691519	Orthologous to human POTEB (POTE ankyrin domain family member B) and POTEB2 (POTE ankyrin domain family member B2).
         BufferedReader in = Utils.openReader(localFile);
         String line;
         while( (line=in.readLine())!=null ) {
+
+            // skip lines with comments and empty lines
+            if( line.startsWith("#") || Utils.isStringEmpty(line) ) {
+                continue;
+            }
+
             String[] cols = line.split("[\\t]", -1);
             if( cols.length!=3 ) {
                 throw new Exception("ERROR: was expecting 3 columns");
@@ -52,12 +62,15 @@ public class AgrGeneDescViaTsvFile extends AgrGeneDesc {
             String autoDesc = cols[2].trim();
             if( autoDesc.equals("No description available") ) {
                 autoDesc = "";
+                linesWithoutDescription++;
             }
             descMap.put(rgdCurie, autoDesc);
         }
         in.close();
 
         geneCountNotInAgr = 0;
+
+        log.info("   lines without description: "+Utils.formatThousands(linesWithoutDescription));
     }
 
     String getLatestFileUrlForSpecies(String speciesName) throws Exception {
@@ -100,7 +113,7 @@ public class AgrGeneDescViaTsvFile extends AgrGeneDesc {
     }
 
     String readCompressedFileAsString(String fileName) throws IOException {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         BufferedReader in = Utils.openReader(fileName);
         String line;
         while( (line=in.readLine())!=null ) {
