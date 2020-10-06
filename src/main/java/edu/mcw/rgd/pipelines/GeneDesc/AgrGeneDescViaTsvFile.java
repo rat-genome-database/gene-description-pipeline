@@ -39,6 +39,7 @@ public class AgrGeneDescViaTsvFile extends AgrGeneDesc {
 
         String localFile = fd.downloadNew();
 
+        int linesWithData = 0;
         int linesWithoutDescription = 0;
 
         // sample two lines from the tab-separated-file:
@@ -57,6 +58,7 @@ public class AgrGeneDescViaTsvFile extends AgrGeneDesc {
             if( cols.length!=3 ) {
                 throw new Exception("ERROR: was expecting 3 columns");
             }
+            linesWithData++;
 
             String rgdCurie = cols[0].trim();
             String autoDesc = cols[2].trim();
@@ -70,7 +72,8 @@ public class AgrGeneDescViaTsvFile extends AgrGeneDesc {
 
         geneCountNotInAgr = 0;
 
-        log.info("   lines without description: "+Utils.formatThousands(linesWithoutDescription));
+        log.info("   incoming data lines: "+Utils.formatThousands(linesWithData));
+        log.info("   data lines without description: "+Utils.formatThousands(linesWithoutDescription));
     }
 
     String getLatestFileUrlForSpecies(String speciesName) throws Exception {
