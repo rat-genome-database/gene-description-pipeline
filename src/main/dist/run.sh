@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 #
-# GeneDescription pipeline cmdline params:
+# cmdline params:
 # --jsonApi   # download automatic gene descriptions via JSON API calls
 # --tsvFile   # download automatic gene descriptions via TSV file
 #
 . /etc/profile
-APPNAME=GeneDescPipeline
+APPNAME="gene-description-pipeline"
 SERVER=`hostname -s | tr '[a-z]' '[A-Z]'`
 
 APPDIR=/home/rgddata/pipelines/$APPNAME

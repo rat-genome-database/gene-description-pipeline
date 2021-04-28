@@ -13,7 +13,7 @@ apply plugin: 'application'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 mainClassName = 'edu.mcw.rgd.pipelines.GeneDesc.Main'
-String myAppName = 'GeneDescPipeline'
+String myAppName = 'gene-description-pipeline'
 
 repositories {
     mavenCentral()
@@ -26,8 +26,8 @@ dependencies {
     compile 'com.google.code.gson:gson:2.8.6'
     compile 'log4j:log4j:1.2.17'
     compile 'com.oracle.ojdbc:ojdbc8:19.3.0.0'
-    compile 'org.springframework:spring-beans:5.1.9.RELEASE'
-    compile 'org.springframework:spring-jdbc:5.1.9.RELEASE'
+    compile 'org.springframework:spring-beans:5.2.0.RELEASE'
+    compile 'org.springframework:spring-jdbc:5.2.0.RELEASE'
 
     compile fileTree(dir: 'lib', include: '*.jar')
 }

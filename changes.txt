@@ -1,3 +1,6 @@
+Apr 28, 2021
+  -renamed dist target to 'gene-description-pipeline'
+
 Oct 06, 2020
   -improved logging
 
