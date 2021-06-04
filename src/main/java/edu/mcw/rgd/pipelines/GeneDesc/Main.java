@@ -92,10 +92,10 @@ public class Main {
         }
 
         List<Gene> activeGenes = dao.getGenesForSpecies(speciesTypeKey);
-        log.info("  genes to be processed: "+activeGenes.size());
+        log.info("  genes to be processed: "+Utils.formatThousands(activeGenes.size()));
 
         Map<Integer,String> geneRgdIdToCurieMap = getGeneRgdIdToCurieMap(speciesTypeKey, activeGenes);
-        log.info("  gene curies loaded:    "+geneRgdIdToCurieMap.size());
+        log.info("  gene curies loaded:    "+Utils.formatThousands(geneRgdIdToCurieMap.size()));
 
         Collections.shuffle(activeGenes);
         for( Gene gene: activeGenes ) {
@@ -143,22 +143,22 @@ public class Main {
             }
         }
 
-        log.info("  genes not in AGR: "+agrGeneDescManager.getGeneCountNotInAgr());
+        log.info("  genes not in AGR: "+Utils.formatThousands(agrGeneDescManager.getGeneCountNotInAgr()));
 
         if( genesWithoutCurie!=0 ) {
-            log.info("  genes in RGD without CURIE: " + genesWithoutCurie);
+            log.info("  genes in RGD without CURIE: " + Utils.formatThousands(genesWithoutCurie));
         }
         if( genesWithClearedDesc!=0 ) {
-            log.info("  genes with cleared desc: " + genesWithClearedDesc);
+            log.info("  genes with cleared desc: " + Utils.formatThousands(genesWithClearedDesc));
         }
 
-        log.info("  genes with automated AGR description: "+genesWithAgrDesc);
-        log.info("  genes with new automated AGR description: "+newAgrDesc);
-        log.info("  genes with up-to-date automated AGR description: "+upToDateAgrDesc);
+        log.info("  genes with automated AGR description: "+Utils.formatThousands(genesWithAgrDesc));
+        log.info("  genes with new automated AGR description: "+Utils.formatThousands(newAgrDesc));
+        log.info("  genes with up-to-date automated AGR description: "+Utils.formatThousands(upToDateAgrDesc));
 
-        log.info("  genes with automated merged description: "+genesWithMergedDesc);
-        log.info("  genes with new automated merged description: "+newMergedDesc);
-        log.info("  genes with up-to-date automated merged description: "+upToDateMergedDesc);
+        log.info("  genes with automated merged description: "+Utils.formatThousands(genesWithMergedDesc));
+        log.info("  genes with new automated merged description: "+Utils.formatThousands(newMergedDesc));
+        log.info("  genes with up-to-date automated merged description: "+Utils.formatThousands(upToDateMergedDesc));
         log.info("");
     }
 
