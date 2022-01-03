@@ -6,7 +6,8 @@ import edu.mcw.rgd.datamodel.Gene;
 import edu.mcw.rgd.datamodel.SpeciesType;
 import edu.mcw.rgd.datamodel.XdbId;
 import edu.mcw.rgd.process.Utils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +23,7 @@ public class DAO {
     GeneDAO gdao = new GeneDAO();
     XdbIdDAO xdao = new XdbIdDAO();
 
-    Logger logChangedDesc = Logger.getLogger("changedDesc");
+    Logger logChangedDesc = LogManager.getLogger("changedDesc");
 
     public String getConnectionInfo() {
         return gdao.getConnectionInfo();

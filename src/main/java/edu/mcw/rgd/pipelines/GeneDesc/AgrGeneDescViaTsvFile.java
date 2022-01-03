@@ -2,7 +2,8 @@ package edu.mcw.rgd.pipelines.GeneDesc;
 
 import edu.mcw.rgd.process.FileDownloader;
 import edu.mcw.rgd.process.Utils;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,7 +15,7 @@ import java.util.Map;
  */
 public class AgrGeneDescViaTsvFile extends AgrGeneDesc {
 
-    Logger log = Logger.getLogger("summary");
+    Logger log = LogManager.getLogger("status");
 
     private Map<String, String> descMap = new HashMap<>();
     private int geneCountNotInAgr;
@@ -131,7 +132,7 @@ public class AgrGeneDescViaTsvFile extends AgrGeneDesc {
         String autoDesc = descMap.get(curie);
         if( autoDesc==null ) {
             geneCountNotInAgr++;
-            Logger.getLogger("rgdGenesNotInAgr").debug(getSpeciesName()+"  "+curie);
+            LogManager.getLogger("rgdGenesNotInAgr").debug(getSpeciesName()+"  "+curie);
         }
         else if( autoDesc.isEmpty() ) {
             autoDesc = null;

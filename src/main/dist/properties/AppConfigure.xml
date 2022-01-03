@@ -2,7 +2,7 @@
 
 <beans>
     <bean id="main" class="edu.mcw.rgd.pipelines.GeneDesc.Main">
-        <property name="version" value="Gene Description pipeline   -- build Jun 04, 2021 --" />
+        <property name="version" value="Gene Description pipeline   -- build Jan 03, 2023 --" />
         <property name="speciesProcessed">
             <list>
                 <value>rat</value>
