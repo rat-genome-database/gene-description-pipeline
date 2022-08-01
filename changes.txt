@@ -1,3 +1,6 @@
+Aug 01, 2022
+  bumped up dependencies
+
 May 31, 2022
   renamed 'master' branch to 'main'
 
