@@ -19,7 +19,6 @@ public class AgrGeneDescViaTsvFile extends AgrGeneDesc {
 
     private Map<String, String> descMap = new HashMap<>();
     private int geneCountNotInAgr;
-    private Map<String,String> geneDescFiles;
     private Map<String,String> latestFiles;
     private String downloadUrlPrefix;
 
@@ -142,14 +141,6 @@ public class AgrGeneDescViaTsvFile extends AgrGeneDesc {
 
     public int getGeneCountNotInAgr() {
         return geneCountNotInAgr;
-    }
-
-    public void setGeneDescFiles(Map geneDescFiles) {
-        this.geneDescFiles = geneDescFiles;
-    }
-
-    public Map<String,String> getGeneDescFiles() {
-        return geneDescFiles;
     }
 
     public void setLatestFiles(Map<String,String> latestFiles) {
