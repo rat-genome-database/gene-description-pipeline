@@ -2,7 +2,7 @@
 #
 # cmdline params:
 # --jsonApi   # download automatic gene descriptions via JSON API calls (legacy)
-# --tsvFile   # download automatic gene descriptions via TSV file (recommeded)
+# --tsvFile   # download automatic gene descriptions via TSV file (recommended)
 #
 . /etc/profile
 APPNAME="gene-description-pipeline"
